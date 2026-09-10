@@ -1,24 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { finalResult, isValidCandidate, sameDayThreeFiftyFivePm, scoreAttempt, type Attempt, type ExamDefinition } from "../shared/exam";
+import { EXAM_DURATION_MS, finalResult, isValidCandidate, oneHourFromStart, scoreAttempt, type Attempt, type ExamDefinition } from "../shared/exam";
 import { buildResultRow, createAttempt, getAttempt, loadExam, removeAttempt } from "./exam";
 
-function expectedSameDayDeadline(now: Date): string {
-  const deadline = new Date(now);
-  deadline.setHours(15, 55, 0, 0);
-  return deadline.toISOString();
-}
-
 describe("exam timing and scoring", () => {
-  it("uses 3:55 PM on the same server day", () => {
+  it("sets the deadline to one hour after the start time", () => {
     const now = new Date("2026-08-28T12:15:00.000Z");
-    expect(new Date(sameDayThreeFiftyFivePm(now)).toISOString()).toBe(expectedSameDayDeadline(now));
+    expect(oneHourFromStart(now)).toBe(now.getTime() + EXAM_DURATION_MS);
+    expect(new Date(oneHourFromStart(now)).toISOString()).toBe("2026-08-28T13:15:00.000Z");
   });
 
-  it("keeps the deadline on the same server day after 3:55 PM has passed", () => {
+  it("keeps a one-hour window from start even later in the day", () => {
     const now = new Date("2026-08-28T16:15:00.000Z");
-    expect(new Date(sameDayThreeFiftyFivePm(now)).toISOString()).toBe(expectedSameDayDeadline(now));
+    expect(new Date(oneHourFromStart(now)).toISOString()).toBe("2026-08-28T17:15:00.000Z");
   });
 
   it("validates both required candidate fields", () => {

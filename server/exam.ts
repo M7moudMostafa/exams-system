@@ -10,7 +10,7 @@ import {
   type ExamDefinition,
   finalResult,
   scoreAttempt,
-  sameDayThreeFiftyFivePm,
+  oneHourFromStart,
 } from "../shared/exam";
 
 const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
@@ -70,7 +70,7 @@ export function createAttempt(candidateName: string, phoneNumber: string, now = 
   ) as Record<string, AnswerKey[]>;
   const attempt: Attempt = {
     id: randomUUID(), examName: exam.examName, candidateName, phoneNumber,
-    startedAt: now, deadlineAt: sameDayThreeFiftyFivePm(new Date(now)), answers: {}, questionOrder, optionOrders,
+    startedAt: now, deadlineAt: oneHourFromStart(new Date(now)), answers: {}, questionOrder, optionOrders,
   };
   const attempts = readAttempts(); attempts[attempt.id] = attempt; writeAttempts(attempts);
   return attempt;

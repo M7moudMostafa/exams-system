@@ -28,9 +28,9 @@ Every submitted attempt is appended to `data/results.xlsx` on the exam host only
 Start the application on the computer that will act as the exam server:
 
 ```bash
-pnpm install
+npm install
 node scripts/create-sample-workbooks.mjs
-pnpm dev
+npm run dev
 ```
 
 The server binds to `0.0.0.0` and normally uses port `3000`. Find the host computer’s Wi-Fi IPv4 address, for example `192.168.1.25`, and open this address from every phone:

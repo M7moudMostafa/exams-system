@@ -39,10 +39,10 @@ export type AttemptSnapshot = Omit<Attempt, "answers"> & {
 
 export const ANSWER_LABELS = ["A", "B", "C", "D"] as const;
 
-export function sameDayThreeFiftyFivePm(now = new Date()): number {
-  const deadline = new Date(now);
-  deadline.setHours(15, 55, 0, 0);
-  return deadline.getTime();
+export const EXAM_DURATION_MS = 60 * 60 * 1000;
+
+export function oneHourFromStart(now = new Date()): number {
+  return now.getTime() + EXAM_DURATION_MS;
 }
 
 export function formatRemaining(ms: number): string {
