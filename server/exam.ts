@@ -13,8 +13,14 @@ import {
   oneHourFromStart,
 } from "../shared/exam";
 
-const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
-const questionsPath = path.join(dataDir, "questions.xlsx");
+// Bundled output lives in dist/ or api/; project data is always at <cwd>/data.
+const bundledSiblingData = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
+const projectDataDir = fs.existsSync(path.join(process.cwd(), "data", "questions.xlsx"))
+  ? path.resolve(process.cwd(), "data")
+  : bundledSiblingData;
+// Vercel’s filesystem is read-only except /tmp — keep questions readable, write state to /tmp.
+const dataDir = process.env.VERCEL ? path.join("/tmp", "exam-data") : projectDataDir;
+const questionsPath = path.join(process.env.VERCEL ? projectDataDir : dataDir, "questions.xlsx");
 const attemptsPath = path.join(dataDir, "attempts.json");
 const resultsPath = path.join(dataDir, "results.xlsx");
 const answerKeys: AnswerKey[] = ["A", "B", "C", "D"];
